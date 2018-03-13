@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.params=type
+comment0.target=Ball(java.lang.String)
+comment1.params=
+comment1.target=int\ getHorizontalLine()
+comment2.params=
+comment2.target=int\ getVerticalLine()
+comment3.params=
+comment3.target=int\ getValue()
+comment4.params=
+comment4.target=java.awt.Color\ getBallColor()
+comment5.params=
+comment5.target=int\ getMaxValue()
+comment6.params=h
+comment6.target=void\ setHorizontalLine(int)
+comment7.params=v
+comment7.target=void\ setVerticalLine(int)
+comment8.params=v
+comment8.target=void\ setValue(int)
+comment9.params=c
+comment9.target=void\ setColor(java.awt.Color)
+numComments=10

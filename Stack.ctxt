@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=v
+comment0.target=void\ push(java.lang.Object)
+comment0.text=\r\n\ Push\ a\ value\ on\ the\ stack.\ Will\ probably\ crash\ if\ passed\ null.\r\n\ You\ could\ technically\ keep\ a\ pointer\ to\ the\ object\ you\ push,\ but\r\n\ using\ it\ to\ modify\ the\ object\ would\ violate\ the\ stack\ principle\r\n\ (don't\ modify\ things\ once\ they're\ in\ the\ stack)\r\n\ @param\ v\ object\ to\ push\ on\ the\ stack.\ DOES\ NOT\ CLONE\ THE\ OBJECT.\r\n
+comment1.params=
+comment1.target=java.lang.Object\ pop()
+comment1.text=\r\n\ Pop\ an\ object\ off\ the\ stack.\r\n\ @return\ object\ popped\ off\ stack\r\n
+comment2.params=
+comment2.target=java.lang.Object\ peek()
+comment2.text=\r\n\ peek\ at\ the\ top\ object\ of\ the\ stack.\ Caution\ should\ be\ used\ as\ this\ could\ be\ used\r\n\ to\ modify\ the\ top\ object\ of\ the\ stack,\ although\ that\ technically\ violates\r\n\ how\ stacks\ should\ be\ used.\r\n\ @return\ object\ at\ top\ of\ stack.\ DOES\ NOT\ CLONE\ OBJECT.\r\n
+numComments=3

@@ -1,0 +1,502 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+/**
+ * @author Tomasz Mroz
+ * Solves a maze inputted from a text file
+ * Prints the path taken excluding any backtracks
+ */
+public class MazeSolver{
+    Stack<MazeLocation> maze  = new Stack<>();
+    ArrayList<String> mazeList = new ArrayList<>();
+    ArrayList<MazeLocation> oldMaze = new ArrayList();
+    /**
+     * Needed a nonstatic way to create the Arraylist
+     */
+    public MazeSolver(){
+        listCreator("maze.txt");
+        mainLoop();
+ 
+    }    
+ 
+    /**
+     * Creates the object that runs the program
+     */
+    public static void main(String[] main){
+        new MazeSolver();
+    }    
+ 
+    /**
+     * Creates a Scanner object which reads in the maze line by line
+     * Stores it in a arraylist
+     */
+    private void listCreator(String filename){
+        try{
+ 
+            Scanner scan = new Scanner( new BufferedReader( new FileReader(filename)));
+            while(scan.hasNextLine()){
+                mazeList.add(scan.nextLine());
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }    
+    }    
+ 
+    /**
+     * Searches for the starting location and starts the game
+     * When finished finding the end the game prints the solution set in reverse order
+     */
+    private void mainLoop(){
+        for(int a = 0; a < mazeList.size(); a++){
+            for(int b = 0; b < mazeList.get(a).length(); b++){
+                if(mazeList.get(a).substring(b, b+1).equals("@")){
+                    maze.push(new MazeLocation(a,b));
+ 
+                }
+            }
+        }
+        if(maze.peek() == null){
+            System.out.println("Maze has no starting point");
+        }    
+        else{
+            new SolverLoop();
+        }
+ 
+        Stack<MazeLocation> temp = new Stack<>();
+        //prints in reverse order
+        while(maze.peek() != null){
+            temp.push(maze.pop());
+        }
+        int x = 0;
+        while(temp.peek() != null){
+            System.out.printf("Step #%d: %d, %d \n", x, temp.peek().getDownLocation(), temp.peek().getLeftLocation());
+            temp.pop();
+            x++;
+        }  
+    }    
+    /**
+     * Inner class that represents a location on the maze
+     */
+    private class MazeLocation{
+        private int downLocation;
+        private int leftLocation;
+        public MazeLocation(int downLocation, int leftLocation){
+            this.downLocation = downLocation;
+            this.leftLocation = leftLocation;
+        }
+ 
+        public int getDownLocation(){
+            return downLocation;
+        }
+ 
+        public int getLeftLocation(){
+            return leftLocation;
+        }
+ 
+        /**
+         * Modification to the equals method to ensure it workin
+         */
+        @Override
+        public boolean equals(Object obj){
+            if(obj == this){
+                return true;
+            }
+            if(obj instanceof MazeLocation){
+                MazeLocation location = (MazeLocation) obj;
+                return (downLocation == location.getDownLocation()) && (leftLocation == location.getLeftLocation());
+            }    
+            return false;
+        }    
+ 
+    }  
+    /**
+     * Handles the main solution of the maze
+     */
+    private class SolverLoop{
+ 
+        public SolverLoop(){
+            try{
+                while(!(mazeList.get(maze.peek().getDownLocation()).substring(maze.peek().getLeftLocation(), maze.peek().getLeftLocation() + 1).equals("$"))){
+                    solver();
+                }
+            }
+            catch(NullPointerException e){
+                System.out.println("Maze is impossible");
+            }    
+        }
+        int down;
+        int left;
+        /**
+         * Tests if a spot up down left or right is either a possible free spot or the end
+         * If it has not moved there yet, it pushes the location on the stack
+         * returns if finds a potential move
+         * if not it pops the stack
+         */
+        private void solver(){
+            down = maze.peek().getDownLocation();
+            left = maze.peek().getLeftLocation();
+            boolean beenThere = false;
+            if(down == 0 && left == 0){
+                 if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                 if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }
+            else if(down == 0 && left == mazeList.get(down).length() - 1){
+                 if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                 if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 1, left).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() - 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }
+            else if(down == mazeList.size() - 1 && left == 0){
+                 if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() - 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                 if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }
+            //Bottom conrner
+            else if(down == mazeList.size() - 1 && left == mazeList.get(down).length() - 1){
+                 if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() - 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                 if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 1, left).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() - 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }    
+            //top row
+            else if(down == 0  && left > 0){
+                if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1 ,left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+ 
+                }
+                if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 1, left).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() - 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+ 
+            }
+            else if( down == mazeList.size() - 1 && left > 0){
+                if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 1, left).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+ 
+            }
+            else if( left == 0 && down > 0){
+                if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() - 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }
+            else if( left == mazeList.get(down).length() - 1 && down > 0){
+                if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() - 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        oldMaze.add(new MazeLocation(down, left));
+                        return;
+                    }    
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 2, left - 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() - 1));
+                        oldMaze.add(new MazeLocation(down, left));
+                        return;
+                    }
+                    beenThere = false;
+                }
+            }
+            else{
+                if((mazeList.get(down - 1).substring(left, left + 1).equals(".")) || mazeList.get(down - 1).substring(left, left + 1).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down - 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() - 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down + 1).substring(left, left + 1).equals(".")) || mazeList.get(down + 1).substring(left, left + 1).equals("$")){
+ 
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down + 1, left))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation() + 1, maze.peek().getLeftLocation()));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left - 1, left).equals(".")) || mazeList.get(down).substring(left - 1, left).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left - 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() - 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+                if((mazeList.get(down).substring(left + 1, left + 2).equals(".")) || mazeList.get(down).substring(left + 1, left + 2).equals("$")){
+                    for(int foo = 0; foo < oldMaze.size(); foo++){
+                        if(oldMaze.get(foo).equals(new MazeLocation(down, left + 1))) {
+                            beenThere = true;
+                        }
+                    }    
+                    if(!beenThere){
+                        oldMaze.add(new MazeLocation(down, left));
+                        maze.push(new MazeLocation(maze.peek().getDownLocation(), maze.peek().getLeftLocation() + 1));
+                        return;
+                    }
+                    beenThere = false;
+                }
+ 
+            }    
+            oldMaze.add(new MazeLocation(down, left));
+            noMove();
+        }  
+ 
+        /**
+         * Called if no move has been made
+         * Tries to pop and if it cannot the maze cannot be completed
+         * if not pops the stack
+         */
+        private void noMove(){
+            if(maze.peek() == null){
+                System.out.println("Maze is impossible");
+            }    
+            else{
+                maze.pop();
+            }
+ 
+        }  
+    }
+}

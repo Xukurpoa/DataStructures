@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.params=
+comment0.target=MazeSolver()
+comment0.text=\r\n\ Needed\ a\ nonstatic\ way\ to\ create\ the\ ArrayList\r\n\ Searches\ for\ the\ starting\ location\ and\ starts\ the\ game\r\n\ When\ finished\ finding\ the\ end\ the\ game\ prints\ the\ solution\ set\ in\ reverse\ order\r\n
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+comment1.text=\r\n\ Creates\ the\ object\ that\ runs\ the\ program\r\n
+comment2.params=filename
+comment2.target=void\ listCreator(java.lang.String)
+comment2.text=\r\n\ Creates\ a\ Scanner\ object\ which\ reads\ in\ the\ maze\ line\ by\ line\r\n\ Stores\ it\ in\ a\ arraylist\r\n\ @param\ filename\ Name\ of\ the\ file\ that\ contains\ the\ maze\r\n
+comment3.params=
+comment3.target=void\ solver()
+comment3.text=\r\n\ Tests\ if\ a\ spot\ up\ down\ left\ or\ right\ is\ either\ a\ possible\ free\ spot\ or\ the\ end\r\n\ If\ it\ has\ not\ moved\ there\ yet,\ it\ pushes\ the\ location\ on\ the\ stack\r\n\ returns\ if\ finds\ a\ potential\ move\r\n\ if\ not\ it\ pops\ the\ stack\r\n
+comment4.params=
+comment4.target=void\ noMove()
+comment4.text=\r\n\ Called\ if\ no\ move\ has\ been\ made\r\n\ Tries\ to\ pop\ and\ if\ it\ cannot\ the\ maze\ cannot\ be\ completed\r\n\ if\ not\ pops\ the\ stack\r\n
+comment5.params=nDown\ nLeft
+comment5.target=boolean\ move(int,\ int)
+comment5.text=\r\n\ Tests\ for\ overlap\ or\ places\ on\ stack\r\n\ @param\ nDown\ New\ Down\ var\ to\ test\ or\ put\ onto\ the\ stack\r\n\ @param\ nLeft\ New\ Left\ var\ to\ test\ or\ put\ onto\ stack\r\n\ @return\ If\ true\ spot\ is\ valid\ and\ method\ returns.\ If\ flase,\ continues\ to\ look\ for\ spots\r\n
+numComments=6

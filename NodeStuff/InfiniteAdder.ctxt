@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=void\ main()
+comment0.text=\r\n\ Main\ method,\ adds\ the\ integers\ and\ prints\ the\ result\ to\ standard\ output\r\n
+comment1.params=file
+comment1.target=Digit\ listCreator(java.lang.String)
+comment1.text=\ \r\n\ Converts\ the\ files\ into\ a\ doubly\ linked\ list\r\n\ @param\ file\ File\ that\ contains\ an\ integer\ will\ be\ turned\ into\ linked\ list\r\n\ @return\ Tail\ of\ created\ doubly\ linked\ list\r\n\ \r\n
+numComments=2

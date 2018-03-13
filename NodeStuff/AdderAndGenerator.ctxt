@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=arg1\ arg2
+comment0.target=void\ main(int,\ int)
+comment0.text=\r\n\ Main\ method,\ adds\ the\ integers\ and\ prints\ the\ result\ to\ standard\ output\r\n\ @param\ arg1\ max\ value\ for\ the\ first\ randomly\ generated\ list\r\n\ @param\ arg2\ max\ value\ for\ the\ second\ randomly\ generated\ list\r\n
+comment1.params=file
+comment1.target=Digit\ listCreator(java.lang.String)
+comment1.text=\r\n\ Converts\ the\ files\ into\ a\ doubly\ linked\ list\r\n\ @param\ file\ File\ that\ contains\ an\ integer\ will\ be\ turned\ into\ linked\ list\r\n\ @return\ Tail\ of\ created\ doubly\ linked\ list\r\n
+comment2.params=file\ fileLength
+comment2.target=void\ fileCreator(java.lang.String,\ int)
+comment2.text=\r\n\ Creates\ a\ file\ of\ a\ specified\ length\ and\ fills\ it\ with\ random\ integers\ from\ 0\ to\ 9\r\n\ @param\ file\ the\ name\ of\ the\ file\ to\ be\ created\r\n\ @param\ fileLength\ size\ of\ the\ file\ to\ be\ created\r\n
+numComments=3

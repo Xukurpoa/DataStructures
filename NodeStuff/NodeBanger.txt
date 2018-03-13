@@ -1,0 +1,34 @@
+import java.io.*;
+import java.util.Scanner;
+
+
+/**
+ * @author Tom Mroz 
+ * This inputs a series of numbers from a text file and creates a linked list to represent them. 
+ * It later outputs the numbers through standard output
+ */
+public class NodeBanger{
+    /**
+     * Main method that contains the whole program
+     */
+    public static void main() {
+        try{
+            Scanner scan = new Scanner(new BufferedReader (new FileReader("nums.txt")));       
+            Node head = new Node(Integer.parseInt(scan.nextLine()));
+            Node curr = head;       
+            while(scan.hasNext() == true){
+                curr.setNext(new Node(Integer.parseInt(scan.nextLine())));
+                curr = curr.getNext();
+            }
+            curr = head;
+            while(curr != null) {
+                System.out.println(curr.get());
+                curr = curr.getNext();
+            }
+        }
+        catch(Exception e){
+            System.out.println("error");
+            System.out.println(e.getMessage());
+        }  
+    }
+}
